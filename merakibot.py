@@ -51,8 +51,7 @@ def handle_command(command, channel):
     # This is where you implement commands
     if command.startswith(EXAMPLE_COMMAND):
         client = getclient(command[3:])
-        msg = json.dumps(client)
-        response = "*{}*".format(msg)
+        response = format(client)
 
     # Sends the response back to the channel
     slack_client.api_call(
