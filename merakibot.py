@@ -2,7 +2,7 @@ import os
 import time
 import re
 from slackclient import SlackClient
-from getclient import getclient
+from client import Client
 import json
 
 # instantiate Slack client
@@ -50,7 +50,7 @@ def handle_command(command, channel):
 
     # This is where you implement commands
     if command.startswith(EXAMPLE_COMMAND):
-        client = getclient(command[3:])
+        client = Client(command[3:]).clientinfo()
         response = format(client)
 
     # Sends the response back to the channel
