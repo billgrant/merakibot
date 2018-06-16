@@ -1,0 +1,34 @@
+from meraki import meraki   
+import os
+
+# API key and ORG id exported for dev purposes
+apikey = os.environ.get('APIKEY')
+orgid = os.environ.get('ORGID')
+
+class Client():
+    """Class to retrieve client data from the Meraki API"""
+
+    def __init__(self, client_id):
+        """intialize client attributes."""
+        self.client_id = client_id
+
+    def getclient(self):
+        """Gets the devices in a meraki organization"""
+        devices = meraki.get_device_statuses(apikey, orgid)
+        client_details = []
+        for device in devices:
+            client_devices = meraki.getclients(apikey, device['serial'])
+            for client_device in client_devices:
+                if client_device['ip'] == self.client_id:
+                    client_device['Connected to'] = device['name']
+                    client_details.append(client_device)
+        return client_details
+
+    def clientinfo(self):
+        message= ""
+        clients = Client.getclient(self)
+        for client in clients:
+            for key, value in client.items():
+                message += "\n" + str(key).upper() + " : " + str(value)
+            return message
+                
