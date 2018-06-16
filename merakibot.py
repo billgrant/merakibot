@@ -2,6 +2,8 @@ import os
 import time
 import re
 from slackclient import SlackClient
+from getclient import getclient
+import json
 
 # instantiate Slack client
 slack_client = SlackClient(os.environ.get('MERAKI_BOT_TOKEN'))
@@ -11,7 +13,7 @@ merakibot_id = None
 
 # constants
 RTM_READ_DELAY = 1 # 1 second delay between reading from RTM
-EXAMPLE_COMMAND = "do"
+EXAMPLE_COMMAND = "ip"
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
 
 def parse_bot_commands(slack_events):
@@ -48,7 +50,9 @@ def handle_command(command, channel):
 
     # This is where you implement commands
     if command.startswith(EXAMPLE_COMMAND):
-        response = "Meraki API call here!"
+        client = getclient(command[3:])
+        msg = json.dumps(client)
+        response = "*{}*".format(msg)
 
     # Sends the response back to the channel
     slack_client.api_call(
