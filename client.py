@@ -13,9 +13,11 @@ class Client():
         self.client_id = client_id
 
     def getclient(self):
-        """Gets the devices in a meraki organization"""
+        """Gets the devices in a meraki organization """
         devices = meraki.get_device_statuses(apikey, orgid)
         client_details = []
+        """Finds the device(s) the client is connected to and creats a list
+        with the user data and switch name"""
         for device in devices:
             client_devices = meraki.getclients(apikey, device['serial'])
             for client_device in client_devices:
@@ -25,6 +27,7 @@ class Client():
         return client_details
 
     def clientinfo(self):
+        """Formats the text for output to Slack"""
         message= ""
         clients = Client.getclient(self)
         for client in clients:
