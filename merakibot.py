@@ -13,7 +13,7 @@ merakibot_id = None
 
 # constants
 RTM_READ_DELAY = 1 # 1 second delay between reading from RTM
-EXAMPLE_COMMAND = "ip"
+GET_CLIENT = "get_client"
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
 
 def parse_bot_commands(slack_events):
@@ -43,14 +43,14 @@ def handle_command(command, channel):
     """Executes bot command if the command is known"""
 
     # Default response is help text for the user
-    default_response = "Not sure what you mean. Try *{}*.".format(EXAMPLE_COMMAND)
+    default_response = "Not sure what you mean. Try *{}*.".format(GET_CLIENT)
 
     # Finds and executes the given command, filling in response
     response = None
 
     # This is where you implement commands
-    if command.startswith(EXAMPLE_COMMAND):
-        client = Client(command[3:]).clientinfo()
+    if command.startswith(GET_CLIENT):
+        client = Client(command[11:]).clientinfo()
         response = format(client)
 
     # Sends the response back to the channel

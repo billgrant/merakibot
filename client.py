@@ -11,20 +11,20 @@ class Client():
     def __init__(self, client_id):
         """intialize client attributes."""
         self.client_id = client_id
-
+        
     def getclient(self):
         """Gets the devices in a meraki organization """
         devices = meraki.get_device_statuses(apikey, orgid)
-        client_details = []
+        
         """Finds the device(s) the client is connected to and creats a list
         with the user data and switch name"""
         for device in devices:
             client_devices = meraki.getclients(apikey, device['serial'])
             for client_device in client_devices:
                 if client_device['ip'] == self.client_id:
-                   client_device['Connected to'] = device['name']
-                   client_device['network'] = Client.getnetworkname(self, device['networkId'])
-                   client_details.append(client_device)
+                    client_details = Client.buildclientdetails(self, client_device, device) 
+                elif client_device['mac'] == self.client_id:
+                    client_details = Client.buildclientdetails(self, client_device, device)
         return client_details
 
     def clientinfo(self):
@@ -42,4 +42,10 @@ class Client():
         network = meraki.getnetworkdetail(apikey, networkId)
         return network['name']
 
+    def buildclientdetails(self, client_device, device):
+        client_details = []
+        client_device['Connected to'] = device['name']
+        client_device['network'] = Client.getnetworkname(self, device['networkId'])
+        client_details.append(client_device)
+        return client_details
 
