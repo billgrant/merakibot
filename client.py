@@ -22,8 +22,9 @@ class Client():
             client_devices = meraki.getclients(apikey, device['serial'])
             for client_device in client_devices:
                 if client_device['ip'] == self.client_id:
-                    client_device['Connected to'] = device['name']
-                    client_details.append(client_device)
+                   client_device['Connected to'] = device['name']
+                   client_device['network'] = Client.getnetworkname(self, device['networkId'])
+                   client_details.append(client_device)
         return client_details
 
     def clientinfo(self):
@@ -35,3 +36,10 @@ class Client():
                 message += "\n" + str(key).upper() + " : " + str(value)
             return message
                 
+    def getnetworkname(self, networkId):
+        """Gets the details about the networkId that
+        was passed. Then returns them the calling function"""
+        network = meraki.getnetworkdetail(apikey, networkId)
+        return network['name']
+
+
